@@ -1,0 +1,143 @@
+package io.block.goose.sunday.ui
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.block.goose.sunday.data.local.entity.UserPreferences
+import io.block.goose.sunday.data.remote.UvResponse
+import io.block.goose.sunday.data.repository.UserPreferencesRepository
+import io.block.goose.sunday.data.repository.UvRepository
+import io.block.goose.sunday.domain.calculator.VitaminDCalculator
+import io.block.goose.sunday.domain.model.ClothingLevel
+import io.block.goose.sunday.domain.model.SkinType
+import io.block.goose.sunday.domain.model.SunscreenLevel
+import io.block.goose.sunday.services.LocationDetails
+import io.block.goose.sunday.services.LocationService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+
+// Single state class for the UI
+data class UiState(
+    val uvDataState: UvDataState = UvDataState.Loading,
+    val vitaminDRate: Double = 0.0,
+    val userPreferences: UserPreferences = UserPreferences()
+)
+
+// Events the UI can send to the ViewModel
+sealed class UiEvent {
+    data class SkinTypeChanged(val skinType: SkinType) : UiEvent()
+    data class ClothingChanged(val clothingLevel: ClothingLevel) : UiEvent()
+}
+
+sealed class UvDataState {
+    object Loading : UvDataState()
+    data class Success(val uvResponse: UvResponse) : UvDataState()
+    data class Error(val message: String) : UvDataState()
+}
+
+class MainViewModel(
+    locationService: LocationService,
+    private val uvRepository: UvRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
+) : ViewModel() {
+
+    private val vitaminDCalculator = VitaminDCalculator()
+
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
+
+    // Private flows for intermediate data
+    private val _location = MutableStateFlow<LocationDetails?>(null)
+    private val _uvData = MutableStateFlow<UvDataState>(UvDataState.Loading)
+    private val _userPreferences = MutableStateFlow(UserPreferences())
+
+    init {
+        // Start collecting from the location service
+        viewModelScope.launch {
+            locationService.requestLocationUpdates().collect { locationDetails ->
+                _location.value = locationDetails
+                fetchUvData(locationDetails)
+            }
+        }
+
+        // Load initial user preferences
+        viewModelScope.launch {
+            userPreferencesRepository.getPreferences().collect { prefs ->
+                _userPreferences.value = prefs ?: UserPreferences()
+            }
+        }
+
+        // Combine all data sources into the final UI state
+        viewModelScope.launch {
+            combine(_uvData, _userPreferences) { uvData, prefs ->
+                val vitaminDRate = if (uvData is UvDataState.Success) {
+                    calculateVitaminD(uvData.uvResponse, prefs)
+                } else {
+                    0.0
+                }
+                UiState(
+                    uvDataState = uvData,
+                    userPreferences = prefs,
+                    vitaminDRate = vitaminDRate
+                )
+            }.collect { newState ->
+                _uiState.value = newState
+            }
+        }
+    }
+
+    fun onEvent(event: UiEvent) {
+        when (event) {
+            is UiEvent.SkinTypeChanged -> {
+                viewModelScope.launch {
+                    val newPrefs = _userPreferences.value.copy(skinType = event.skinType)
+                    userPreferencesRepository.savePreferences(newPrefs)
+                }
+            }
+            is UiEvent.ClothingChanged -> {
+                viewModelScope.launch {
+                    val newPrefs = _userPreferences.value.copy(clothingLevel = event.clothingLevel)
+                    userPreferencesRepository.savePreferences(newPrefs)
+                }
+            }
+        }
+    }
+
+    private fun fetchUvData(locationDetails: LocationDetails) {
+        viewModelScope.launch {
+            _uvData.update { UvDataState.Loading }
+            val result = uvRepository.getUvData(locationDetails.latitude, locationDetails.longitude)
+            _uvData.update {
+                result.fold(
+                    onSuccess = { UvDataState.Success(it) },
+                    onFailure = { UvDataState.Error(it.message ?: "Unknown error") }
+                )
+            }
+        }
+    }
+
+    private fun calculateVitaminD(uvResponse: UvResponse, preferences: UserPreferences): Double {
+        val now = ZonedDateTime.now()
+        val zoneId = ZoneId.of(uvResponse.timezone)
+        val currentTimeIndex = uvResponse.hourly.time.indexOfFirst {
+            LocalDateTime.parse(it).atZone(zoneId) > now
+        }.takeIf { it != -1 } ?: return 0.0
+
+        val currentUv = uvResponse.hourly.uvIndex[currentTimeIndex]
+
+        return vitaminDCalculator.calculateVitaminDRate(
+            uvIndex = currentUv ?: 0.0,
+            clothingLevel = preferences.clothingLevel,
+            sunscreenLevel = SunscreenLevel.NONE, // Placeholder
+            skinType = preferences.skinType,
+            userAge = preferences.age,
+            currentTime = now,
+            averageDailyExposure = 1000.0 // Placeholder
+        )
+    }
+}
