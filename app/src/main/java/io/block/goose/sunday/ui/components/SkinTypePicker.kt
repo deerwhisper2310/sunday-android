@@ -48,7 +48,7 @@ fun SkinTypePicker(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = skinType.displayName, fontWeight = FontWeight.Bold)
+                    Text(text = "Type ${skinType.numericValue} - ${skinType.fitzpatrickName}", fontWeight = FontWeight.Bold)
                     Text(text = skinType.description, fontSize = 12.sp)
                 }
                 if (uiState.userPreferences.skinType == skinType) {

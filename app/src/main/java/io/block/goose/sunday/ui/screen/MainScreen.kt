@@ -145,11 +145,11 @@ fun SettingsSection(
     onSunscreenClick: () -> Unit
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SettingButton(title = "CLOTHING", value = uiState.userPreferences.clothingLevel.displayName, onClick = onClothingClick, modifier = Modifier.weight(1f))
+        SettingButton(title = "CLOTHING", value = uiState.userPreferences.clothingLevel.shortDescription, onClick = onClothingClick, modifier = Modifier.weight(1f))
         SettingButton(title = "SUNSCREEN", value = uiState.userPreferences.sunscreen.displayName, onClick = onSunscreenClick, modifier = Modifier.weight(1f))
     }
     Spacer(modifier = Modifier.height(12.dp))
-    SettingButton(title = "SKIN TYPE", value = uiState.userPreferences.skinType.displayName, onClick = onSkinTypeClick)
+    SettingButton(title = "SKIN TYPE", value = uiState.userPreferences.skinType.fitzpatrickName, onClick = onSkinTypeClick)
 }
 
 @Composable
