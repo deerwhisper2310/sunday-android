@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.4.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.4.0)" variant="all" version="8.4.0">
+
+    <issue
+        id="MissingClass"
+        message="Class referenced in the manifest, `io.block.goose.sunday.widget.SundayWidgetReceiver`, was not found in the project or the libraries"
+        errorLine1="        &lt;receiver android:name=&quot;.widget.SundayWidgetReceiver&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="32"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                            value = String.format(&quot;%.1f&quot;, currentUv)"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/block/goose/sunday/ui/screen/MainScreen.kt"
+            line="54"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                            value = String.format(&quot;%.0f&quot;, uiState.vitaminDRate)"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/block/goose/sunday/ui/screen/MainScreen.kt"
+            line="59"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+        errorLine1="        targetSdk = 34"
+        errorLine2="        ~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="16"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InvalidFragmentVersionForActivityResult"
+        message="Upgrade Fragment version to at least 1.3.0."
+        errorLine1="        registerForActivityResult("
+        errorLine2="        ^">
+        <location
+            file="src/main/java/io/block/goose/sunday/MainActivity.kt"
+            line="42"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed"
+        errorLine1="            android:label=&quot;@string/app_name&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.4.0 is available: 8.12.1. (There is also a newer version of 8.4.𝑥 available, if upgrading to 8.12.1 is difficult: 8.4.2)"
+        errorLine1="agp = &quot;8.4.0&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="3"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.4.0 is available: 8.12.1. (There is also a newer version of 8.4.𝑥 available, if upgrading to 8.12.1 is difficult: 8.4.2)"
+        errorLine1="agp = &quot;8.4.0&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="3"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.4.0 is available: 8.12.1. (There is also a newer version of 8.4.𝑥 available, if upgrading to 8.12.1 is difficult: 8.4.2)"
+        errorLine1="agp = &quot;8.4.0&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="3"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.13.1 is available: 1.17.0"
+        errorLine1="coreKtx = &quot;1.13.1&quot;"
+        errorLine2="          ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="7"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.13.1 is available: 1.17.0"
+        errorLine1="coreKtx = &quot;1.13.1&quot;"
+        errorLine2="          ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="7"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.13.1 is available: 1.17.0"
+        errorLine1="coreKtx = &quot;1.13.1&quot;"
+        errorLine2="          ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="7"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0"
+        errorLine1="junitVersion = &quot;1.1.5&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="11"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0"
+        errorLine1="junitVersion = &quot;1.1.5&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="11"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0"
+        errorLine1="junitVersion = &quot;1.1.5&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="11"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="espressoCore = &quot;3.5.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="12"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="espressoCore = &quot;3.5.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="12"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="espressoCore = &quot;3.5.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="12"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.0 is available: 2.9.2"
+        errorLine1="lifecycleRuntimeKtx = &quot;2.8.0&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="13"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.0 is available: 2.9.2"
+        errorLine1="lifecycleRuntimeKtx = &quot;2.8.0&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="13"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.0 is available: 2.9.2"
+        errorLine1="lifecycleRuntimeKtx = &quot;2.8.0&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="13"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.0 is available: 1.10.1"
+        errorLine1="activityCompose = &quot;1.9.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="14"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.0 is available: 1.10.1"
+        errorLine1="activityCompose = &quot;1.9.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="14"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.0 is available: 1.10.1"
+        errorLine1="activityCompose = &quot;1.9.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="14"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.05.00 is available: 2025.08.00"
+        errorLine1="composeBom = &quot;2024.05.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="15"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.05.00 is available: 2025.08.00"
+        errorLine1="composeBom = &quot;2024.05.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="15"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.05.00 is available: 2025.08.00"
+        errorLine1="composeBom = &quot;2024.05.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="15"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.7.2"
+        errorLine1="room = &quot;2.6.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="20"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-location than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesLocation = &quot;21.2.0&quot;"
+        errorLine2="                       ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="21"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-location than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesLocation = &quot;21.2.0&quot;"
+        errorLine2="                       ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="21"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-location than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesLocation = &quot;21.2.0&quot;"
+        errorLine2="                       ~~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="21"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.10.3"
+        errorLine1="work = &quot;2.9.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="22"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.10.3"
+        errorLine1="work = &quot;2.9.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="22"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.10.3"
+        errorLine1="work = &quot;2.9.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/sunday-android/gradle/libs.versions.toml"
+            line="22"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 26"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/block/goose/sunday/services/NotificationService.kt"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 26. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src/main/res/mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;UV Index&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;UV Index&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/widget_preview.xml"
+            line="11"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;5.0&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;5.0&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/widget_preview.xml"
+            line="16"
+            column="9"/>
+    </issue>
+
+</issues>
