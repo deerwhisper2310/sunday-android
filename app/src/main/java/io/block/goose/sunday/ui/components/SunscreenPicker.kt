@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.block.goose.sunday.domain.model.Sunscreen
 import io.block.goose.sunday.ui.UiEvent
 import io.block.goose.sunday.ui.UiState
@@ -37,6 +38,8 @@ fun SunscreenPicker(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = sunscreen.displayName, fontWeight = FontWeight.Bold)
+                    Text(text = sunscreen.description, fontSize = 12.sp)
+
                 }
                 if (uiState.userPreferences.sunscreen == sunscreen) {
                     Icon(imageVector = Icons.Filled.Check, contentDescription = null)
