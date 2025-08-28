@@ -1,18 +1,32 @@
 package io.block.goose.sunday
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -38,6 +52,8 @@ class MainActivity : ComponentActivity() {
         MainViewModelFactory(this, uvRepository, userPreferencesRepository, locationService)
     }
 
+    private var hasLocationPermission by mutableStateOf(false)
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -45,8 +61,8 @@ class MainActivity : ComponentActivity() {
             if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                 permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             ) {
-                // Location permission granted. ViewModel will handle updates.
-                // Now we can schedule our daily worker.
+                hasLocationPermission = true
+                viewModel.startLocationUpdates()
                 scheduleDailyWorker()
             }
             if (permissions[Manifest.permission.POST_NOTIFICATIONS] == true) {
@@ -57,7 +73,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestPermissions()
+        checkPermissions()
 
         setContent {
             SundayTheme {
@@ -65,14 +81,34 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val uiState by viewModel.uiState.collectAsState()
-
-                    MainScreen(
-                        uiState = uiState,
-                        onEvent = viewModel::onEvent
-                    )
+                    if (hasLocationPermission) {
+                        val uiState by viewModel.uiState.collectAsState()
+                        MainScreen(
+                            uiState = uiState,
+                            onEvent = viewModel::onEvent
+                        )
+                    } else {
+                        PermissionRequestScreen {
+                            requestPermissions()
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun checkPermissions() {
+        val locationGranted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (locationGranted) {
+            hasLocationPermission = true
+            viewModel.startLocationUpdates()
         }
     }
 
@@ -99,3 +135,27 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun PermissionRequestScreen(onRequestPermission: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Location Permission Required",
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "This app needs location access to provide personalized UV index and weather data.",
+            modifier = Modifier.padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
+        Button(onClick = onRequestPermission) {
+            Text("Grant Permission")
+        }
+    }
+}

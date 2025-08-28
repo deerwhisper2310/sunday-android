@@ -9,7 +9,7 @@ import io.block.goose.sunday.data.repository.UvRepository
 import io.block.goose.sunday.domain.calculator.VitaminDCalculator
 import io.block.goose.sunday.domain.model.ClothingLevel
 import io.block.goose.sunday.domain.model.SkinType
-import io.block.goose.sunday.domain.model.SunscreenLevel
+import io.block.goose.sunday.domain.model.Sunscreen
 import io.block.goose.sunday.services.LocationDetails
 import io.block.goose.sunday.services.LocationService
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +32,7 @@ data class UiState(
 sealed class UiEvent {
     data class SkinTypeChanged(val skinType: SkinType) : UiEvent()
     data class ClothingChanged(val clothingLevel: ClothingLevel) : UiEvent()
+    data class SunscreenChanged(val sunscreen: Sunscreen) : UiEvent()
 }
 
 sealed class UvDataState {
@@ -41,7 +42,7 @@ sealed class UvDataState {
 }
 
 class MainViewModel(
-    locationService: LocationService,
+    private val locationService: LocationService,
     private val uvRepository: UvRepository,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
@@ -57,14 +58,6 @@ class MainViewModel(
     private val _userPreferences = MutableStateFlow(UserPreferences())
 
     init {
-        // Start collecting from the location service
-        viewModelScope.launch {
-            locationService.requestLocationUpdates().collect { locationDetails ->
-                _location.value = locationDetails
-                fetchUvData(locationDetails)
-            }
-        }
-
         // Load initial user preferences
         viewModelScope.launch {
             userPreferencesRepository.getPreferences().collect { prefs ->
@@ -105,6 +98,22 @@ class MainViewModel(
                     userPreferencesRepository.savePreferences(newPrefs)
                 }
             }
+            is UiEvent.SunscreenChanged -> {
+                viewModelScope.launch {
+                    val newPrefs = _userPreferences.value.copy(sunscreen = event.sunscreen)
+                    userPreferencesRepository.savePreferences(newPrefs)
+                }
+            }
+        }
+    }
+
+    fun startLocationUpdates() {
+        // Start collecting from the location service
+        viewModelScope.launch {
+            locationService.requestLocationUpdates().collect { locationDetails ->
+                _location.value = locationDetails
+                fetchUvData(locationDetails)
+            }
         }
     }
 
@@ -124,8 +133,11 @@ class MainViewModel(
     private fun calculateVitaminD(uvResponse: UvResponse, preferences: UserPreferences): Double {
         val now = ZonedDateTime.now()
         val zoneId = ZoneId.of(uvResponse.timezone)
-        val currentTimeIndex = uvResponse.hourly.time.indexOfFirst {
-            LocalDateTime.parse(it).atZone(zoneId) > now
+
+        // Find the index of the last time entry that is before or at the current time
+        val currentTimeIndex = uvResponse.hourly.time.indexOfLast {
+            val hourlyTime = LocalDateTime.parse(it).atZone(zoneId)
+            hourlyTime.isBefore(now) || hourlyTime.isEqual(now)
         }.takeIf { it != -1 } ?: return 0.0
 
         val currentUv = uvResponse.hourly.uvIndex[currentTimeIndex]
@@ -133,7 +145,7 @@ class MainViewModel(
         return vitaminDCalculator.calculateVitaminDRate(
             uvIndex = currentUv ?: 0.0,
             clothingLevel = preferences.clothingLevel,
-            sunscreenLevel = SunscreenLevel.NONE, // Placeholder
+            sunscreen = preferences.sunscreen,
             skinType = preferences.skinType,
             userAge = preferences.age,
             currentTime = now,

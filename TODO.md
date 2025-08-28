@@ -1,79 +1,39 @@
-Phase 1: Project Foundation & Core Services
-- [x] **1. Set Up Android Studio Project**
-  - Requirements:
-    - Create a new project in Android Studio using the "Empty Activity" template with Jetpack Compose.
-    - Set the package name (e.g., io.block.goose.sunday).
-    - Configure build.gradle.kts to include dependencies:
-      - Jetpack Compose
-      - Retrofit, OkHttp, Kotlinx Serialization Converter
-      - Room
-      - Google's Fused Location Provider
-      - Kotlin Coroutines and Flow
-    - Fulfilled when: Project builds successfully and a basic "Hello World" Compose screen is visible.
+### UI Overhaul Implementation Plan
 
-- [x] **2. Implement Location Services**
-  - Requirements:
-    - Create a LocationService class to manage location fetching.
-    - Integrate the Fused Location Provider API.
-    - Implement permission handling for ACCESS_COARSE_LOCATION and ACCESS_FINE_LOCATION.
-    - Expose location as a StateFlow.
-  - Fulfilled when: App requests permissions and provides current latitude/longitude reliably.
+Here is the list of steps we will take to align the Android app's UI with the iOS version:
 
-- [x] **3. Implement Networking Layer**
-  - Requirements:
-    - Define Kotlin data classes matching Open-Meteo UV API response.
-    - Create Retrofit ApiService for UV forecast fetch.
-    - Implement UvDataRepository to call ApiService and handle errors.
-  - Fulfilled when: UvDataRepository returns parsed UV data for given coordinates.
+*   **[x] Task 1: Replicate the Dynamic Gradient Background**
+    *   **Requirement:** The app's background must be a `LinearGradient` that changes its colors based on the time of day, mimicking the `gradientColors` logic from the iOS app.
+    *   **Fulfillment:**
+        1.  A new Composable function will be created that calculates the correct gradient colors based on the current hour.
+        2.  This function will return a `Brush.linearGradient`.
+        3.  The `MainScreen.kt` will be updated to use this dynamic gradient as its background.
 
-Phase 2: Business Logic & Data Persistence
-- [x] **4. Port Core Calculation Logic**
-  - Requirements:
-    - Port VitaminDCalculator.swift to VitaminDCalculator.kt, preserving methods/formulas.
-    - Include factors: skin type, clothing, sunscreen, etc.
-  - Fulfilled when: Kotlin class passes unit tests matching Swift outputs.
+*   **[x] Task 2: Redesign the Main Screen Layout (Cards & Structure)**
+    *   **Requirement:** The main screen must be restructured to use a card-based layout. Each logical section (UV, Vitamin D, Settings) will be presented as a distinct card with rounded corners and a semi-transparent background.
+    *   **Fulfillment:**
+        1.  The layout in `MainScreen.kt` will be refactored into a vertically scrollable `Column`.
+        2.  Each UI section will be encapsulated in its own Composable function.
+        3.  These Composables will be wrapped in a `Surface` or `Card` with a `Modifier` that applies a `RoundedCornerShape`, a background color of `Color.Black.copy(alpha = 0.2f)`, and appropriate padding.
+        4.  The sections will be ordered to match the iOS app: Header, UV, Vitamin D, Exposure Toggle, and Settings.
 
-- [x] **5. Implement Data Persistence with Room**
-  - Requirements:
-    - Define UserPreferences entity (skin type, age, clothing/sunscreen defaults).
-    - Define UvDataCache entity for cached weather data.
-    - Create DAO interface and Room Database class.
-  - Fulfilled when: App persists user settings and cached data across restarts.
+*   **[x] Task 3: Replicate Typography and Header**
+    *   **Requirement:** The typography throughout the app must be updated to match the style and hierarchy of the iOS version, including the main "SUN DAY" header.
+    *   **Fulfillment:**
+        1.  A new `Text` Composable for the "SUN DAY" header will be created with a large font size and bold weight.
+        2.  All other `Text` Composables will be reviewed and their `fontSize` and `fontWeight` adjusted to create a clear visual hierarchy (e.g., a very large UV index, smaller descriptive labels).
 
-Phase 3: User Interface & Experience
-- [x] **6. Build the Main UI with Jetpack Compose**
-  - Requirements:
-    - Create MainViewModel integrating LocationService, UvDataRepository, and VitaminDCalculator.
-    - Design MainScreen.kt in Compose observing ViewModel state.
-    - Replicate UI components from iOS app:
-      - Dynamic time-of-day background
-      - Real-time UV index and Vitamin D production displays
-      - Interactive pickers for clothing and sunscreen
-      - "Burn limit" notification text
-  - Fulfilled when: UI closely matches iOS app, displays real-time data, responds to user input.
+*   **[x] Task 4: Overhaul the Settings Section**
+    *   **Requirement:** The current settings UI will be replaced with three distinct, styled buttons for Clothing, Sunscreen, and Skin Type. Tapping each button must open a modal bottom sheet containing the picker for that setting.
+    *   **Fulfillment:**
+        1.  The existing `SettingsPicker` will be removed.
+        2.  Three new button Composables will be created and styled to look like the cards in the iOS app.
+        3.  A `ModalBottomSheetLayout` will be implemented to host the picker content.
+        4.  New Composables for `ClothingPicker`, `SunscreenPicker`, and `SkinTypePicker` will be created to be displayed within the bottom sheet. The `SkinTypePicker` will be detailed, including a color swatch and descriptive text, to match the iOS implementation.
 
-- [x] **7. Integrations**
-  - Requirements:
-    - (Intentionally left blank for future consideration)
-  - Fulfilled when: N/A.
-
-Phase 4: Final Features & Polish
-- [x] **8. Implement Notifications**
-  - Requirements:
-    - Create notification channels for alert types.
-    - Use AlarmManager or WorkManager to schedule daily notifications for sunrise, sunset, and peak UV times.
-  - Fulfilled when: App reliably delivers these three notifications at correct local times.
-
-- [ ] **9. Final Testing and Refinement**
-  - Requirements:
-    - End-to-end testing on physical Android device.
-    - Test features: location, API calls, calculations, UI interactions, database persistence, notifications.
-    - Profile for performance and battery usage; fix bugs and polish UI/UX.
-  - Fulfilled when: App is stable, feature-complete, and UX matches original iOS app.
-
-Nice-to-have Backlog
-- Home screen widget using Glance:
-  - Create SundayWidgetReceiver and SundayWidget class.
-  - Widget UI to show current UV index and Vitamin D status.
-  - WorkManager job to update widget periodically.
-  - Acceptance: Widget added to home screen and updates accurately.
+*   **[x] Task 5: Replicate Icons**
+    *   **Requirement:** The icons in the Android app must be updated to match the style of the SF Symbols used in the iOS app.
+    *   **Fulfillment:**
+        1.  The SF Symbols from the iOS app will be identified.
+        2.  The closest available Material Design Icons will be selected from `androidx.compose.material.icons`.
+        3.  All `Icon` Composables will be updated to use these new icons.

@@ -2,7 +2,7 @@ package io.block.goose.sunday.domain.calculator
 
 import io.block.goose.sunday.domain.model.ClothingLevel
 import io.block.goose.sunday.domain.model.SkinType
-import io.block.goose.sunday.domain.model.SunscreenLevel
+import io.block.goose.sunday.domain.model.Sunscreen
 import java.time.ZonedDateTime
 import kotlin.math.abs
 import kotlin.math.exp
@@ -25,7 +25,7 @@ class VitaminDCalculator {
     fun calculateVitaminDRate(
         uvIndex: Double,
         clothingLevel: ClothingLevel,
-        sunscreenLevel: SunscreenLevel,
+        sunscreen: Sunscreen,
         skinType: SkinType,
         userAge: Int?,
         currentTime: ZonedDateTime,
@@ -38,7 +38,7 @@ class VitaminDCalculator {
         val exposureFactor = clothingLevel.exposureFactor
 
         // 3. Sunscreen blocks UV radiation
-        val sunscreenFactor = sunscreenLevel.uvTransmissionFactor
+        val sunscreenFactor = sunscreen.uvTransmissionFactor
 
         // 4. Skin type affects vitamin D synthesis efficiency
         val skinFactor = skinType.vitaminDFactor
