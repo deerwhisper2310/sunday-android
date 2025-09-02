@@ -41,6 +41,9 @@ import io.block.goose.sunday.ui.theme.SundayTheme
 import io.block.goose.sunday.worker.DailySchedulingWorker
 import java.util.concurrent.TimeUnit
 
+import androidx.activity.enableEdgeToEdge
+
+
 class MainActivity : ComponentActivity() {
 
     private val database by lazy { AppDatabase.getDatabase(this) }
@@ -73,6 +76,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        enableEdgeToEdge()
+
         checkPermissions()
 
         setContent {
@@ -85,7 +90,8 @@ class MainActivity : ComponentActivity() {
                         val uiState by viewModel.uiState.collectAsState()
                         MainScreen(
                             uiState = uiState,
-                            onEvent = viewModel::onEvent
+                            onEvent = viewModel::onEvent,
+                            modifier = Modifier
                         )
                     } else {
                         PermissionRequestScreen {

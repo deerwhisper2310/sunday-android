@@ -35,7 +35,9 @@ private enum class ActiveSheet {
 @Composable
 fun MainScreen(
     uiState: UiState,
-    onEvent: (UiEvent) -> Unit
+    onEvent: (UiEvent) -> Unit,
+    modifier: Modifier = Modifier
+
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -49,48 +51,55 @@ fun MainScreen(
         }
     }
 
-    DynamicBackground {
-        when (val uvDataState = uiState.uvDataState) {
-            is UvDataState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+    DynamicBackground(
+        modifier = Modifier.fillMaxSize() // DynamicBackground itself should fill the physical screen
+    ) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .safeDrawingPadding() // Apply safeDrawingPadding to this wrapping Box
+        ) {
+            when (val uvDataState = uiState.uvDataState) {
+                is UvDataState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { // No safeDrawingPadding here
+                        CircularProgressIndicator()
+                    }
                 }
-            }
-            is UvDataState.Success -> {
-                val now = ZonedDateTime.now()
-                val zoneId = ZoneId.of(uvDataState.uvResponse.timezone)
-                val currentTimeIndex = uvDataState.uvResponse.hourly.time.indexOfFirst {
-                    LocalDateTime.parse(it).atZone(zoneId) > now
-                }
-                val currentUv = if (currentTimeIndex != -1) uvDataState.uvResponse.hourly.uvIndex[currentTimeIndex] ?: 0.0 else 0.0
+                is UvDataState.Success -> {
+                    val now = ZonedDateTime.now()
+                    val zoneId = ZoneId.of(uvDataState.uvResponse.timezone)
+                    val currentTimeIndex = uvDataState.uvResponse.hourly.time.indexOfFirst {
+                        LocalDateTime.parse(it).atZone(zoneId) > now
+                    }
+                    val currentUv = if (currentTimeIndex != -1) uvDataState.uvResponse.hourly.uvIndex[currentTimeIndex] ?: 0.0 else 0.0
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Header()
-                    Spacer(modifier = Modifier.height(20.dp))
-                    UvSection(currentUv = currentUv)
-                    Spacer(modifier = Modifier.height(20.dp))
-                    VitaminDSection(vitaminDRate = uiState.vitaminDRate)
-                    Spacer(modifier = Modifier.height(32.dp))
-                    SettingsSection(
-                        uiState = uiState,
-                        onSkinTypeClick = { activeSheet = ActiveSheet.SKIN_TYPE },
-                        onClothingClick = { activeSheet = ActiveSheet.CLOTHING },
-                        onSunscreenClick = { activeSheet = ActiveSheet.SUNSCREEN }
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize() // No safeDrawingPadding here
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Header()
+                        Spacer(modifier = Modifier.height(20.dp))
+                        UvSection(currentUv = currentUv)
+                        Spacer(modifier = Modifier.height(20.dp))
+                        VitaminDSection(vitaminDRate = uiState.vitaminDRate)
+                        Spacer(modifier = Modifier.height(32.dp))
+                        SettingsSection(
+                            uiState = uiState,
+                            onSkinTypeClick = { activeSheet = ActiveSheet.SKIN_TYPE },
+                            onClothingClick = { activeSheet = ActiveSheet.CLOTHING },
+                            onSunscreenClick = { activeSheet = ActiveSheet.SUNSCREEN }
+                        )
+                    }
                 }
-            }
-            is UvDataState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "Error: ${uvDataState.message}",
-                        color = MaterialTheme.colorScheme.error
-                    )
+                is UvDataState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { // No safeDrawingPadding here
+                        Text(
+                            text = "Error: ${uvDataState.message}",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
         }
@@ -98,13 +107,16 @@ fun MainScreen(
         if (activeSheet != ActiveSheet.NONE) {
             ModalBottomSheet(
                 onDismissRequest = { activeSheet = ActiveSheet.NONE },
-                sheetState = sheetState
+                sheetState = sheetState,
+                windowInsets = WindowInsets(0, 0, 0, 0) // ADDED: To make sheet extend full screen
             ) {
-                when (activeSheet) {
-                    ActiveSheet.SKIN_TYPE -> SkinTypePicker(uiState, onEvent, ::hideBottomSheet)
-                    ActiveSheet.CLOTHING -> ClothingPicker(uiState, onEvent, ::hideBottomSheet)
-                    ActiveSheet.SUNSCREEN -> SunscreenPicker(uiState, onEvent, ::hideBottomSheet)
-                    ActiveSheet.NONE -> {}
+                Column(modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())) { // ADDED: Apply padding to content
+                    when (activeSheet) {
+                        ActiveSheet.SKIN_TYPE -> SkinTypePicker(uiState, onEvent, ::hideBottomSheet)
+                        ActiveSheet.CLOTHING -> ClothingPicker(uiState, onEvent, ::hideBottomSheet)
+                        ActiveSheet.SUNSCREEN -> SunscreenPicker(uiState, onEvent, ::hideBottomSheet)
+                        ActiveSheet.NONE -> {}
+                    }
                 }
             }
         }
