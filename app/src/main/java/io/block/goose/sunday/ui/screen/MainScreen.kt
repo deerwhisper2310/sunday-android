@@ -26,6 +26,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 private enum class ActiveSheet {
     NONE, SKIN_TYPE, CLOTHING, SUNSCREEN
@@ -81,7 +83,13 @@ fun MainScreen(
                     ) {
                         Header()
                         Spacer(modifier = Modifier.height(20.dp))
-                        UvSection(currentUv = currentUv)
+                        UvSection(
+                            currentUv = currentUv,
+                            burnTime = uiState.burnTime,
+                            maxUv = uiState.maxUv,
+                            sunrise = uiState.sunrise,
+                            sunset = uiState.sunset
+                        )
                         Spacer(modifier = Modifier.height(20.dp))
                         VitaminDSection(vitaminDRate = uiState.vitaminDRate)
                         Spacer(modifier = Modifier.height(32.dp))
@@ -134,11 +142,108 @@ fun Header() {
 }
 
 @Composable
-fun UvSection(currentUv: Double) {
-    Card(
-        title = "UV INDEX",
-        value = String.format("%.1f", currentUv)
-    )
+fun UvSection(
+    currentUv: Double,
+    burnTime: Int?,
+    maxUv: Double?,
+    sunrise: String?,
+    sunset: String?
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        color = Color.Black.copy(alpha = 0.2f)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "UV INDEX",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White.copy(alpha = 0.7f)
+            )
+            Text(
+                text = String.format("%.1f", currentUv),
+                fontSize = 72.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "BURN LIMIT",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = if (burnTime != null) "$burnTime min" else "---",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "MAX UVI",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = if (maxUv != null) String.format("%.1f", maxUv) else "---",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "SUNRISE",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = sunrise?.let { formatTime(it) } ?: "---",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "SUNSET",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = sunset?.let { formatTime(it) } ?: "---",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun formatTime(dateTime: String): String {
+    return try {
+        val ldt = LocalDateTime.parse(dateTime)
+        val formatter = DateTimeFormatter.ofPattern("h:mma")
+        ldt.format(formatter)
+    } catch (e: Exception) {
+        "---"
+    }
 }
 
 @Composable

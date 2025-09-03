@@ -20,12 +20,17 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.math.max
 
 // Single state class for the UI
 data class UiState(
     val uvDataState: UvDataState = UvDataState.Loading,
     val vitaminDRate: Double = 0.0,
-    val userPreferences: UserPreferences = UserPreferences()
+    val userPreferences: UserPreferences = UserPreferences(),
+    val burnTime: Int? = null,
+    val maxUv: Double? = null,
+    val sunrise: String? = null,
+    val sunset: String? = null
 )
 
 // Events the UI can send to the ViewModel
@@ -73,10 +78,34 @@ class MainViewModel(
                 } else {
                     0.0
                 }
+                val burnTime = if (uvData is UvDataState.Success) {
+                    calculateBurnTimeInMinutes(uvData.uvResponse, prefs.skinType)
+                } else {
+                    null
+                }
+                val maxUv = if (uvData is UvDataState.Success) {
+                    uvData.uvResponse.daily.uvIndexMax.firstOrNull()
+                } else {
+                    null
+                }
+                val sunrise = if (uvData is UvDataState.Success) {
+                    uvData.uvResponse.daily.sunrise.firstOrNull()
+                } else {
+                    null
+                }
+                val sunset = if (uvData is UvDataState.Success) {
+                    uvData.uvResponse.daily.sunset.firstOrNull()
+                } else {
+                    null
+                }
                 UiState(
                     uvDataState = uvData,
                     userPreferences = prefs,
-                    vitaminDRate = vitaminDRate
+                    vitaminDRate = vitaminDRate,
+                    burnTime = burnTime,
+                    maxUv = maxUv,
+                    sunrise = sunrise,
+                    sunset = sunset
                 )
             }.collect { newState ->
                 _uiState.value = newState
@@ -151,5 +180,31 @@ class MainViewModel(
             currentTime = now,
             averageDailyExposure = 1000.0 // Placeholder
         )
+    }
+
+    private fun calculateBurnTimeInMinutes(uvResponse: UvResponse, skinType: SkinType): Int? {
+        val now = ZonedDateTime.now()
+        val zoneId = ZoneId.of(uvResponse.timezone)
+
+        val currentTimeIndex = uvResponse.hourly.time.indexOfLast {
+            val hourlyTime = LocalDateTime.parse(it).atZone(zoneId)
+            hourlyTime.isBefore(now) || hourlyTime.isEqual(now)
+        }.takeIf { it != -1 } ?: return null
+
+        val currentUv = uvResponse.hourly.uvIndex[currentTimeIndex] ?: return null
+
+        val medTimesAtUv1 = mapOf(
+            SkinType.TYPE1 to 150.0,
+            SkinType.TYPE2 to 250.0,
+            SkinType.TYPE3 to 425.0,
+            SkinType.TYPE4 to 600.0,
+            SkinType.TYPE5 to 850.0,
+            SkinType.TYPE6 to 1100.0
+        )
+
+        val medTime = medTimesAtUv1[skinType] ?: return null
+        val uvToUse = max(currentUv, 0.1)
+        val fullMed = medTime / uvToUse
+        return max(1, fullMed.toInt())
     }
 }
