@@ -1,9 +1,9 @@
-# ☀️ Sunday
+# ☀️ Sun Day
 
 ## ✨ Project Overview
 
 
-Sunday is an open-source Android application designed to help you stay informed about the UV Index and optimize your Vitamin D production, all while minimizing sun exposure risks. Inspired by [its iOS counterpart](https://github.com/jackjackbits/sunday), Sunday provides real-time UV data, personalized Vitamin D calculations, and adapts its interface dynamically to the time of day.
+Sun Day is an open-source Android application designed to help you stay informed about the UV Index and optimize your Vitamin D production, all while minimizing sun exposure risks. Inspired by [its iOS counterpart](https://github.com/jackjackbits/sunday), Sun Day provides real-time UV data, personalized Vitamin D calculations, and adapts its interface dynamically to the time of day.
 
 This project is being vibecoded via [Goose](https://block.github.io/goose), mainly with Gemini 2.5 Pro.
 
