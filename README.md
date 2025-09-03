@@ -9,7 +9,7 @@ This project is being vibecoded via [Goose](https://block.github.io/goose), main
 
 This is the first Android app I've ever created so expect issues! Learning on the fly here :)
 
-<img width="108" height="240" alt="Screenshot_20250903-110310" src="https://github.com/user-attachments/assets/7b433960-11fc-4496-9bc6-4fdd4ba45df3" /> <img width="108" height="240" alt="Screenshot_20250902-220757" src="https://github.com/user-attachments/assets/b5b07b2c-94ad-4f0f-846e-3614331ccb45" />
+<img width="162" height="360" alt="Screenshot_20250903-110310" src="https://github.com/user-attachments/assets/7b433960-11fc-4496-9bc6-4fdd4ba45df3" /> <img width="162" height="360" alt="Screenshot_20250902-220757" src="https://github.com/user-attachments/assets/b5b07b2c-94ad-4f0f-846e-3614331ccb45" />
 
 
 ## 🚀 Features
