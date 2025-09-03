@@ -1,4 +1,3 @@
-
 package io.block.goose.sunday.services
 
 import android.content.Context
@@ -29,14 +28,14 @@ object NotificationScheduler {
         val now = Calendar.getInstance().time
         val sunEvents = SunEventCalculator.calculate(latitude, longitude, now, timezoneId)
 
-        scheduleNotification(workManager, sunEvents.sunrise, "🌅 The sun is up!", "Today's max UV index: ${maxUv.toInt()}.", SUNRISE_TAG)
+        scheduleNotification(workManager, sunEvents.sunrise, "🌅 The sun is up!", "Today\'s max UV index: %.1f.".format(maxUv), SUNRISE_TAG)
 
         // Calculate solar noon notification time (30 minutes before actual solar noon)
         val solarNoonTimeMillis = (sunEvents.sunrise.time + sunEvents.sunset.time) / 2
         val notificationTimeMillis = solarNoonTimeMillis - (30 * 60 * 1000) // 30 minutes before
         val solarNoonNotificationTime = Date(notificationTimeMillis)
 
-        scheduleNotification(workManager, solarNoonNotificationTime, "☀️ Solar noon approaching!", "Peak UV in 30 minutes (UV ${maxUv.toInt()}).", NOON_TAG)
+        scheduleNotification(workManager, solarNoonNotificationTime, "☀️ Solar noon approaching!", "Peak UV in 30 minutes (UV %.1f).".format(maxUv), NOON_TAG)
 
     }
 
