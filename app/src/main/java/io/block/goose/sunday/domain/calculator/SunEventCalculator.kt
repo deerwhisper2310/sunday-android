@@ -1,4 +1,3 @@
-
 package io.block.goose.sunday.domain.calculator
 
 import java.util.Calendar
@@ -41,17 +40,33 @@ object SunEventCalculator {
 
     private fun dateFromFractionalDay(calendar: Calendar, fractionalDay: Double, timezoneId: String): Date {
         val targetZone = java.util.TimeZone.getTimeZone(timezoneId)
+
+        // Create a Calendar instance for the target timezone for the DATE part.
+        // This 'cal' will represent midnight of the target day in the target timezone.
         val cal = Calendar.getInstance(targetZone).apply {
-            // Copy date part from original calendar (which has the correct year/month/day)
-            time = calendar.time
+            set(Calendar.YEAR, calendar.get(Calendar.YEAR))
+            set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+            set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
 
-        val totalMinutes = (fractionalDay * 24 * 60).toInt()
-        cal.add(Calendar.MINUTE, totalMinutes)
+        // fractionalDay is typically minutes from UTC midnight.
+        // Convert fractionalDay to total minutes from UTC midnight.
+        val totalMinutesFromUTCMidnight = (fractionalDay * 24 * 60).toInt()
+
+        // Get the offset of the target timezone from UTC *for this specific date/time*.
+        // The offset is in milliseconds. For EDT (UTC-4), this will be -14400000 ms = -240 minutes.
+        val offsetMillis = targetZone.getOffset(cal.timeInMillis)
+        val offsetMinutes = offsetMillis / (1000 * 60)
+
+        // To convert the UTC-relative 'totalMinutesFromUTCMidnight' into minutes relative
+        // to the 'targetZone's midnight, we add the offset.
+        val minutesFromTargetZoneMidnight = totalMinutesFromUTCMidnight + offsetMinutes
+
+        cal.add(Calendar.MINUTE, minutesFromTargetZoneMidnight)
         return cal.time
     }
 }

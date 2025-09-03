@@ -10,11 +10,15 @@ import io.block.goose.sunday.worker.SunEventWorker
 import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import android.util.Log // Added this import
 
 object NotificationScheduler {
 
     private const val SUNRISE_TAG = "SUNRISE_NOTIFICATION"
     private const val NOON_TAG = "NOON_NOTIFICATION"
+
+    // Tag for logging
+    private const val TAG = "NotificationScheduler"
 
 
     fun scheduleDailyNotifications(context: Context, latitude: Double, longitude: Double, timezoneId: String, maxUv: Double) {
@@ -57,6 +61,11 @@ object NotificationScheduler {
                 .build()
 
             workManager.enqueueUniqueWork(tag, ExistingWorkPolicy.REPLACE, workRequest)
+
+            // Log the scheduled notification details
+            Log.d(TAG, "Scheduled notification: Tag=$tag, EventTime=$eventTime, Delay=${delay}ms")
+        } else {
+            Log.d(TAG, "Not scheduling notification for tag=$tag as eventTime=$eventTime is in the past (delay=${delay}ms)")
         }
     }
 }
