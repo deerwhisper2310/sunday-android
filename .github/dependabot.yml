@@ -1,0 +1,21 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+# .github/dependabot.yml
+
+version: 2
+updates:
+  # Rule 1: Check for Gradle dependency updates (for the Android app)
+  - package-ecosystem: "gradle"
+    directory: "/" # Location of build.gradle.kts files (root of the project)
+    schedule:
+      interval: "daily" # How often to check for updates: "daily", "weekly", or "monthly"
+    open-pull-requests-limit: 10 # Don't open more than 10 PRs at once to avoid spam
+
+  # Rule 2: Check for GitHub Actions updates (for CI/CD workflows)
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of your workflow files
+    schedule:
+      interval: "daily"
