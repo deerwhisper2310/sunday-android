@@ -183,7 +183,15 @@ fun UvSection(
                         color = Color.White.copy(alpha = 0.6f)
                     )
                     Text(
-                        text = if (burnTime != null) "$burnTime min" else "---",
+                        text = burnTime?.let {
+                            if (it >= 60) {
+                                val hours = it / 60
+                                val minutes = it % 60
+                                "${hours}h ${minutes}m"
+                            } else {
+                                "${it}m"
+                            }
+                        } ?: "---",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
