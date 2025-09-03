@@ -16,22 +16,28 @@ object NotificationScheduler {
 
     private const val SUNRISE_TAG = "SUNRISE_NOTIFICATION"
     private const val NOON_TAG = "NOON_NOTIFICATION"
-    private const val SUNSET_TAG = "SUNSET_NOTIFICATION"
 
-    fun scheduleDailyNotifications(context: Context, latitude: Double, longitude: Double) {
+
+    fun scheduleDailyNotifications(context: Context, latitude: Double, longitude: Double, timezoneId: String, maxUv: Double) {
         val workManager = WorkManager.getInstance(context)
 
         // Cancel any previously scheduled notifications to avoid duplicates
         workManager.cancelAllWorkByTag(SUNRISE_TAG)
         workManager.cancelAllWorkByTag(NOON_TAG)
-        workManager.cancelAllWorkByTag(SUNSET_TAG)
+
 
         val now = Calendar.getInstance().time
-        val sunEvents = SunEventCalculator.calculate(latitude, longitude, now)
+        val sunEvents = SunEventCalculator.calculate(latitude, longitude, now, timezoneId)
 
-        scheduleNotification(workManager, sunEvents.sunrise, "Sunrise", "Good morning! The sun is rising.", SUNRISE_TAG)
-        scheduleNotification(workManager, sunEvents.solarNoon, "Peak UV", "UV index is at its peak. Stay safe!", NOON_TAG)
-        scheduleNotification(workManager, sunEvents.sunset, "Sunset", "The sun is setting. Enjoy the evening!", SUNSET_TAG)
+        scheduleNotification(workManager, sunEvents.sunrise, "🌅 The sun is up!", "Today's max UV index: ${maxUv.toInt()}.", SUNRISE_TAG)
+
+        // Calculate solar noon notification time (30 minutes before actual solar noon)
+        val solarNoonTimeMillis = (sunEvents.sunrise.time + sunEvents.sunset.time) / 2
+        val notificationTimeMillis = solarNoonTimeMillis - (30 * 60 * 1000) // 30 minutes before
+        val solarNoonNotificationTime = Date(notificationTimeMillis)
+
+        scheduleNotification(workManager, solarNoonNotificationTime, "☀️ Solar noon approaching!", "Peak UV in 30 minutes (UV ${maxUv.toInt()}).", NOON_TAG)
+
     }
 
     private fun scheduleNotification(workManager: WorkManager, eventTime: Date, title: String, message: String, tag: String) {

@@ -11,7 +11,7 @@ object SunEventCalculator {
 
     data class SunEvents(val sunrise: Date, val solarNoon: Date, val sunset: Date)
 
-    fun calculate(latitude: Double, longitude: Double, date: Date): SunEvents {
+    fun calculate(latitude: Double, longitude: Double, date: Date, timezoneId: String): SunEvents {
         val calendar = Calendar.getInstance().apply { time = date }
         val dayOfYear = calendar.get(Calendar.DAY_OF_YEAR)
 
@@ -33,18 +33,22 @@ object SunEventCalculator {
         val sunsetTime = solarNoonTime + Math.toDegrees(hourAngle) * 4 / 1440.0
 
         return SunEvents(
-            sunrise = dateFromFractionalDay(calendar, sunriseTime),
-            solarNoon = dateFromFractionalDay(calendar, solarNoonTime),
-            sunset = dateFromFractionalDay(calendar, sunsetTime)
+            sunrise = dateFromFractionalDay(calendar, sunriseTime, timezoneId),
+            solarNoon = dateFromFractionalDay(calendar, solarNoonTime, timezoneId),
+            sunset = dateFromFractionalDay(calendar, sunsetTime, timezoneId)
         )
     }
 
-    private fun dateFromFractionalDay(calendar: Calendar, fractionalDay: Double): Date {
-        val cal = calendar.clone() as Calendar
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
+    private fun dateFromFractionalDay(calendar: Calendar, fractionalDay: Double, timezoneId: String): Date {
+        val targetZone = java.util.TimeZone.getTimeZone(timezoneId)
+        val cal = Calendar.getInstance(targetZone).apply {
+            // Copy date part from original calendar (which has the correct year/month/day)
+            time = calendar.time
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
 
         val totalMinutes = (fractionalDay * 24 * 60).toInt()
         cal.add(Calendar.MINUTE, totalMinutes)
