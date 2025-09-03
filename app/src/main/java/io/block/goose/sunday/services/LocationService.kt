@@ -31,10 +31,10 @@ class LocationService(private val context: Context) {
             return@callbackFlow
         }
 
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(60))
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(300)) // Desired: 5 minutes
             .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(30))
-            .setMaxUpdateDelayMillis(TimeUnit.MINUTES.toMillis(2))
+            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(180)) // Fastest: 3 minutes
+            .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(600)) // Max delay for batching: 10 minutes
             .build()
 
         val locationCallback = object : LocationCallback() {

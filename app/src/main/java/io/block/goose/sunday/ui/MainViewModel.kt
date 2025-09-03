@@ -193,6 +193,9 @@ class MainViewModel(
 
         val currentUv = uvResponse.hourly.uvIndex[currentTimeIndex] ?: return null
 
+        // If UV index is 0, burn time is not applicable
+        if (currentUv == 0.0) return null
+
         val medTimesAtUv1 = mapOf(
             SkinType.TYPE1 to 150.0,
             SkinType.TYPE2 to 250.0,
