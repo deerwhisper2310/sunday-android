@@ -23,7 +23,7 @@ This is the first Android app I've ever created so expect issues! Learning on th
   
 ## 🤝 Contributing
 
-I welcome and encourage contributions! If you're interested in helping improve Sunday, please submit issues and pull requests.
+Contributions are absolutely welcome and encouraged! Please submit issues, feature requests, and PRs!
 
 ## 🛠️ Getting Started
 
