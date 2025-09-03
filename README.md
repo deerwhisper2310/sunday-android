@@ -2,11 +2,17 @@
 
 ## ✨ Project Overview
 
+
 Sunday is an open-source Android application designed to help you stay informed about the UV Index and optimize your Vitamin D production, all while minimizing sun exposure risks. Inspired by its iOS counterpart (https://github.com/jackjackbits/sunday), Sunday provides real-time UV data, personalized Vitamin D calculations, and adapts its interface dynamically to the time of day.
 
 This project is being vibecoded via Goose (https://block.github.io/goose), mainly with Gemini 2.5 Pro.
 
 This is the first Android app I've ever created so expect issues! Learning on the fly here :)
+
+<img width="216" height="480" alt="Screenshot_20250902-145812" src="https://github.com/user-attachments/assets/e1cbf60b-fa92-47e3-80e8-7e3a73859dd0" />
+<img width="216" height="480" alt="Screenshot_20250902-171509" src="https://github.com/user-attachments/assets/fed62696-f9f7-452f-88be-9ea1f7f72003" />
+<img width="216" height="480" alt="Screenshot_20250902-191241" src="https://github.com/user-attachments/assets/392c0c92-826f-47de-9b2b-0b62a0ac0d84" />
+<img width="216" height="480" alt="Screenshot_20250902-195121" src="https://github.com/user-attachments/assets/bf522a2a-fbba-44fa-b483-52f57848e3d8" />
 
 ## 🚀 Features
 
