@@ -16,8 +16,5 @@ enum class SkinType(
     TYPE5(5, "Dark", "Rarely burns, tans profusely", 0.4, Color(0xFFA17C64)),
     TYPE6(6, "Very Dark", "Never burns, deeply pigmented", 0.2, Color(0xFF664B3C));
 
-    // Update displayName to now return "Type 1", "Type 2", etc.
-    // This will affect wherever displayName is used on the main screen.
-    val displayName: String
-        get() = "Type $numericValue"
+
 }
