@@ -39,7 +39,7 @@ object NotificationScheduler {
         val notificationTimeMillis = solarNoonTimeMillis - (30 * 60 * 1000) // 30 minutes before
         val solarNoonNotificationTime = Date(notificationTimeMillis)
 
-        scheduleNotification(workManager, solarNoonNotificationTime, "☀️ Solar noon approaching!", "Peak UV in 30 minutes (UV %.1f).".format(maxUv), NOON_TAG)
+        scheduleNotification(workManager, solarNoonNotificationTime, "☀️ Solar noon approaching!", "Peak UV in 30 minutes (UV %.1f)".format(maxUv), NOON_TAG)
 
     }
 
