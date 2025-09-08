@@ -30,7 +30,8 @@ data class UiState(
     val burnTime: Int? = null,
     val maxUv: Double? = null,
     val sunrise: String? = null,
-    val sunset: String? = null
+    val sunset: String? = null,
+    val isInfoCardVisible: Boolean = false
 )
 
 // Events the UI can send to the ViewModel
@@ -38,6 +39,8 @@ sealed class UiEvent {
     data class SkinTypeChanged(val skinType: SkinType) : UiEvent()
     data class ClothingChanged(val clothingLevel: ClothingLevel) : UiEvent()
     data class SunscreenChanged(val sunscreen: Sunscreen) : UiEvent()
+    object InfoClicked : UiEvent()
+    object InfoCardDismissed : UiEvent()
 }
 
 sealed class UvDataState {
@@ -79,7 +82,7 @@ class MainViewModel(
                     0.0
                 }
                 val burnTime = if (uvData is UvDataState.Success) {
-                    calculateBurnTimeInMinutes(uvData.uvResponse, prefs.skinType)
+                    calculateBurnTimeInMinutes(uvData.uvResponse, prefs.skinType, prefs.clothingLevel, prefs.sunscreen)
                 } else {
                     null
                 }
@@ -133,6 +136,12 @@ class MainViewModel(
                     userPreferencesRepository.savePreferences(newPrefs)
                 }
             }
+            UiEvent.InfoClicked -> {
+                _uiState.update { it.copy(isInfoCardVisible = true) }
+            }
+            UiEvent.InfoCardDismissed -> {
+                _uiState.update { it.copy(isInfoCardVisible = false) }
+            }
         }
     }
 
@@ -182,7 +191,7 @@ class MainViewModel(
         )
     }
 
-    private fun calculateBurnTimeInMinutes(uvResponse: UvResponse, skinType: SkinType): Int? {
+    private fun calculateBurnTimeInMinutes(uvResponse: UvResponse, skinType: SkinType, clothingLevel: ClothingLevel, sunscreen: Sunscreen): Int? {
         val now = ZonedDateTime.now()
         val zoneId = ZoneId.of(uvResponse.timezone)
 
@@ -206,7 +215,9 @@ class MainViewModel(
         )
 
         val medTime = medTimesAtUv1[skinType] ?: return null
-        val uvToUse = max(currentUv, 0.1)
+        // Apply clothing and sunscreen transmission factors
+        val effectiveUv = currentUv * clothingLevel.exposureFactor * sunscreen.uvTransmissionFactor // Corrected: use exposureFactor
+        val uvToUse = max(effectiveUv, 0.1) // Ensure it's never zero to avoid division by zero
         val fullMed = medTime / uvToUse
         return max(1, fullMed.toInt())
     }

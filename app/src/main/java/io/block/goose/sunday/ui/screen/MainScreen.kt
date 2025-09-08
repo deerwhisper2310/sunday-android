@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +23,7 @@ import io.block.goose.sunday.ui.components.ClothingPicker
 import io.block.goose.sunday.ui.components.DynamicBackground
 import io.block.goose.sunday.ui.components.SkinTypePicker
 import io.block.goose.sunday.ui.components.SunscreenPicker
+import io.block.goose.sunday.ui.components.VitaminDInfoCard
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -81,7 +83,7 @@ fun MainScreen(
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Header()
+                        Header(onInfoClick = { onEvent(UiEvent.InfoClicked) })
                         Spacer(modifier = Modifier.height(20.dp))
                         UvSection(
                             currentUv = currentUv,
@@ -112,6 +114,10 @@ fun MainScreen(
             }
         }
 
+        if (uiState.isInfoCardVisible) {
+            VitaminDInfoCard(onDismiss = { onEvent(UiEvent.InfoCardDismissed) })
+        }
+
         if (activeSheet != ActiveSheet.NONE) {
             ModalBottomSheet(
                 onDismissRequest = { activeSheet = ActiveSheet.NONE },
@@ -132,13 +138,26 @@ fun MainScreen(
 }
 
 @Composable
-fun Header() {
-    Text(
-        text = "SUN DAY",
-        fontSize = 40.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color.White
-    )
+fun Header(onInfoClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "SUN DAY",
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.align(Alignment.Center)
+        )
+        IconButton(
+            onClick = onInfoClick,
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "Information",
+                tint = Color.White
+            )
+        }
+    }
 }
 
 @Composable
