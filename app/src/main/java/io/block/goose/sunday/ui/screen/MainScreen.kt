@@ -128,10 +128,42 @@ fun MainScreen(
             ) {
                 Column(modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())) { // ADDED: Apply padding to content
                     when (activeSheet) {
-                        ActiveSheet.SKIN_TYPE -> SkinTypePicker(uiState, onEvent, ::hideBottomSheet)
-                        ActiveSheet.CLOTHING -> ClothingPicker(uiState, onEvent, ::hideBottomSheet)
-                        ActiveSheet.SUNSCREEN -> SunscreenPicker(uiState, onEvent, ::hideBottomSheet)
-                        ActiveSheet.AGE -> AgePicker(uiState, onEvent, ::hideBottomSheet)
+                        ActiveSheet.SKIN_TYPE -> {
+                            Text(
+                                text = "Skin Type",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            SkinTypePicker(uiState, onEvent, ::hideBottomSheet)
+                        }
+                        ActiveSheet.CLOTHING -> {
+                            Text(
+                                text = "Clothing Level",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            ClothingPicker(uiState, onEvent, ::hideBottomSheet)
+                        }
+                        ActiveSheet.SUNSCREEN -> {
+                            Text(
+                                text = "Sunscreen",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            SunscreenPicker(uiState, onEvent, ::hideBottomSheet)
+                        }
+                        ActiveSheet.AGE -> {
+                            Text(
+                                text = "Age",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            AgePicker(uiState, onEvent, ::hideBottomSheet)
+                        }
                         ActiveSheet.NONE -> {}
                     }
                 }
