@@ -115,7 +115,7 @@ fun MainScreen(
         }
 
         if (uiState.isInfoCardVisible) {
-            VitaminDInfoCard(onDismiss = { onEvent(UiEvent.InfoCardDismissed) })
+            VitaminDInfoCard(uiState = uiState, onDismiss = { onEvent(UiEvent.InfoCardDismissed) })
         }
 
         if (activeSheet != ActiveSheet.NONE) {
