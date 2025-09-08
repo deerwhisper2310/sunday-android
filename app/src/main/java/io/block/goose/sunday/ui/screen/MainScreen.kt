@@ -184,7 +184,9 @@ fun UvSection(
                     )
                     Text(
                         text = burnTime?.let {
-                            if (it >= 60) {
+                            if (it >= 1440) {
+                                "---"
+                            } else if (it >= 60) {
                                 val hours = it / 60
                                 val minutes = it % 60
                                 "${hours}h ${minutes}m"
