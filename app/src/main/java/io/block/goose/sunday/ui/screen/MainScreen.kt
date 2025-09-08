@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import io.block.goose.sunday.ui.UiEvent
 import io.block.goose.sunday.ui.UiState
 import io.block.goose.sunday.ui.UvDataState
+import io.block.goose.sunday.ui.components.AgePicker
 import io.block.goose.sunday.ui.components.ClothingPicker
 import io.block.goose.sunday.ui.components.DynamicBackground
 import io.block.goose.sunday.ui.components.SkinTypePicker
@@ -32,7 +33,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 private enum class ActiveSheet {
-    NONE, SKIN_TYPE, CLOTHING, SUNSCREEN
+    NONE, SKIN_TYPE, CLOTHING, SUNSCREEN, AGE
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +100,8 @@ fun MainScreen(
                             uiState = uiState,
                             onSkinTypeClick = { activeSheet = ActiveSheet.SKIN_TYPE },
                             onClothingClick = { activeSheet = ActiveSheet.CLOTHING },
-                            onSunscreenClick = { activeSheet = ActiveSheet.SUNSCREEN }
+                            onSunscreenClick = { activeSheet = ActiveSheet.SUNSCREEN },
+                            onAgeClick = { activeSheet = ActiveSheet.AGE }
                         )
                     }
                 }
@@ -129,6 +131,7 @@ fun MainScreen(
                         ActiveSheet.SKIN_TYPE -> SkinTypePicker(uiState, onEvent, ::hideBottomSheet)
                         ActiveSheet.CLOTHING -> ClothingPicker(uiState, onEvent, ::hideBottomSheet)
                         ActiveSheet.SUNSCREEN -> SunscreenPicker(uiState, onEvent, ::hideBottomSheet)
+                        ActiveSheet.AGE -> AgePicker(uiState, onEvent, ::hideBottomSheet)
                         ActiveSheet.NONE -> {}
                     }
                 }
@@ -288,14 +291,18 @@ fun SettingsSection(
     uiState: UiState,
     onSkinTypeClick: () -> Unit,
     onClothingClick: () -> Unit,
-    onSunscreenClick: () -> Unit
+    onSunscreenClick: () -> Unit,
+    onAgeClick: () -> Unit
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         SettingButton(title = "CLOTHING", value = uiState.userPreferences.clothingLevel.shortDescription, onClick = onClothingClick, modifier = Modifier.weight(1f))
         SettingButton(title = "SUNSCREEN", value = uiState.userPreferences.sunscreen.displayName, onClick = onSunscreenClick, modifier = Modifier.weight(1f))
     }
     Spacer(modifier = Modifier.height(12.dp))
-    SettingButton(title = "SKIN TYPE", value = uiState.userPreferences.skinType.fitzpatrickName, onClick = onSkinTypeClick)
+    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        SettingButton(title = "SKIN TYPE", value = uiState.userPreferences.skinType.fitzpatrickName, onClick = onSkinTypeClick, modifier = Modifier.weight(1f))
+        SettingButton(title = "AGE", value = uiState.userPreferences.age.toString(), onClick = onAgeClick, modifier = Modifier.weight(1f))
+    }
 }
 
 @Composable
