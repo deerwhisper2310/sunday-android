@@ -41,6 +41,7 @@ sealed class UiEvent {
     data class SunscreenChanged(val sunscreen: Sunscreen) : UiEvent()
     object InfoClicked : UiEvent()
     object InfoCardDismissed : UiEvent()
+    data class AgeChanged(val age: Int) : UiEvent()
 }
 
 sealed class UvDataState {
@@ -141,6 +142,12 @@ class MainViewModel(
             }
             UiEvent.InfoCardDismissed -> {
                 _uiState.update { it.copy(isInfoCardVisible = false) }
+            }
+            is UiEvent.AgeChanged -> {
+                viewModelScope.launch {
+                    val newPrefs = _userPreferences.value.copy(age = event.age)
+                    userPreferencesRepository.savePreferences(newPrefs)
+                }
             }
         }
     }
