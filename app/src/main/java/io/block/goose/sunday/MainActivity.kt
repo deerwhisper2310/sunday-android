@@ -89,8 +89,7 @@ class MainActivity : ComponentActivity() {
                         val uiState by viewModel.uiState.collectAsState()
                         MainScreen(
                             uiState = uiState,
-                            onEvent = viewModel::onEvent,
-                            modifier = Modifier
+                            onEvent = viewModel::onEvent
                         )
                     } else {
                         PermissionRequestScreen {
