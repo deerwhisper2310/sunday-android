@@ -50,7 +50,7 @@ fun VitaminDInfoCard(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "VITAMIN D CALCULATION METHODOLOGY",
+                    text = "How It Works",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
