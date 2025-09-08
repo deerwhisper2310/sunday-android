@@ -83,7 +83,7 @@ class MainViewModel(
                     0.0
                 }
                 val burnTime = if (uvData is UvDataState.Success) {
-                    calculateBurnTimeInMinutes(uvData.uvResponse, prefs.skinType, prefs.clothingLevel, prefs.sunscreen)
+                    calculateBurnTimeInMinutes(uvData.uvResponse, prefs.skinType, prefs.clothingLevel, prefs.sunscreen, prefs.age)
                 } else {
                     null
                 }
@@ -198,7 +198,26 @@ class MainViewModel(
         )
     }
 
-    private fun calculateBurnTimeInMinutes(uvResponse: UvResponse, skinType: SkinType, clothingLevel: ClothingLevel, sunscreen: Sunscreen): Int? {
+    private fun calculateAgeFactor(age: Int?): Double {
+        return when {
+            age == null -> 1.0 // No age data available, don't apply factor
+            age <= 20 -> 1.0
+            age >= 70 -> 0.25
+            else -> {
+                // Linear decrease: lose ~1.5% per year after age 20 (matching Swift app's 0.015)
+                // Original was 1.0 - Double(age - 20) * 0.01, but comments suggest 25% at 70, which is 0.015/yr
+                max(0.25, 1.0 - (age - 20) * 0.015)
+            }
+        }
+    }
+
+    private fun calculateBurnTimeInMinutes(
+        uvResponse: UvResponse,
+        skinType: SkinType,
+        clothingLevel: ClothingLevel,
+        sunscreen: Sunscreen,
+        age: Int?
+    ): Int? {
         val now = ZonedDateTime.now()
         val zoneId = ZoneId.of(uvResponse.timezone)
 
@@ -222,10 +241,12 @@ class MainViewModel(
         )
 
         val medTime = medTimesAtUv1[skinType] ?: return null
+        val ageFactor = calculateAgeFactor(age)
+
         // Apply clothing and sunscreen transmission factors
         val effectiveUv = currentUv * clothingLevel.exposureFactor * sunscreen.uvTransmissionFactor // Corrected: use exposureFactor
         val uvToUse = max(effectiveUv, 0.1) // Ensure it's never zero to avoid division by zero
-        val fullMed = medTime / uvToUse
+        val fullMed = (medTime * ageFactor) / uvToUse
         return max(1, fullMed.toInt())
     }
 }
