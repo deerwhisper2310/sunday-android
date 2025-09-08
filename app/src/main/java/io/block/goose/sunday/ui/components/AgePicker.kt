@@ -20,55 +20,34 @@ import androidx.compose.ui.unit.dp
 import io.block.goose.sunday.ui.UiState
 import io.block.goose.sunday.ui.UiEvent
 
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+
 @Composable
 fun AgePicker(
     uiState: UiState,
     onEvent: (UiEvent) -> Unit,
     onDismiss: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Select Your Age",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(16.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn {
-            items((0..100).toList()) { age ->
-                val isSelected = uiState.userPreferences.age == age
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .height(48.dp),
-                    color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium,
-                    onClick = {
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items((0..100).toList()) { age ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
                         onEvent(UiEvent.AgeChanged(age))
                         onDismiss()
                     }
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = age.toString(), style = MaterialTheme.typography.bodyLarge)
-                        if (isSelected) {
-                            Text("Selected", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                        }
-                    }
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = age.toString(), style = MaterialTheme.typography.bodyLarge)
+                if (uiState.userPreferences.age == age) {
+                    Icon(imageVector = Icons.Filled.Check, contentDescription = "Selected")
                 }
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
             }
         }
     }
