@@ -1,0 +1,60 @@
+# Sunday for Android: Project Overview
+
+This document provides a high-level overview of the Sunday Android application, its architecture, and its core components. It is intended to be a reference for developers to quickly understand the codebase.
+
+## 1. Application Purpose
+
+Sunday is a mobile application designed to help users track their Vitamin D synthesis from sun exposure. It provides real-time estimations of Vitamin D production (in IU/min) and safe sun exposure time (burn time) based on several environmental and personal factors.
+
+## 2. Core Technologies
+
+- **Language**: [Kotlin](https://kotlinlang.org/)
+- **UI**: [Jetpack Compose](https://developer.android.com/jetpack/compose) for building the entire user interface.
+- **Architecture**: Model-View-ViewModel (MVVM)
+- **Asynchronous Programming**: Kotlin Coroutines and Flow for managing background tasks and data streams.
+- **Networking**: [Retrofit](https://square.github.io/retrofit/) for making API calls to the weather service, with [OkHttp](https://square.github.io/okhttp/) as the HTTP client.
+- **JSON Parsing**: [Kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) for parsing API responses.
+- **Database**: [Room](https://developer.android.com/jetpack/androidx/releases/room) for local persistence of user preferences.
+- **Location**: Google Play Services Location API for fetching the user's current location.
+- **Background Tasks**: [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) for scheduling daily notifications.
+- **Widgets**: [Glance](https://developer.android.com/jetpack/compose/glance) for creating home screen widgets.
+
+## 3. Architecture (MVVM)
+
+The app follows a standard MVVM pattern, separating concerns into distinct layers:
+
+-   **View (UI Layer)**: Composable functions (`MainScreen.kt`, `InfoCard.kt`, etc.) that observe state from the ViewModel and render the UI. They delegate all user actions to the ViewModel.
+-   **ViewModel (`MainViewModel.kt`)**: Acts as the bridge between the UI and the Data layer. It holds the UI state (`UiState`), handles user events (`UiEvent`), and contains the business logic to process data for the UI.
+-   **Model (Data Layer)**: Consists of Repositories, data sources (both remote and local), and domain models.
+    -   **Repositories (`UvRepository.kt`, `UserPreferencesRepository.kt`)**: Expose data to the ViewModel. They are responsible for coordinating data from different sources.
+    -   **Data Sources**:
+        -   **Remote**: `ApiService.kt` (defined via Retrofit) fetches UV and weather data from an external API.
+        -   **Local**: `AppDatabase.kt` (Room) and `UserPreferencesDao.kt` manage the storage of user settings.
+    -   **Domain Models**: Simple data classes representing the app's data (e.g., `UserPreferences.kt`, `UvResponse.kt`, `SkinType.kt`).
+
+## 4. Key Components
+
+-   **`MainActivity.kt`**: The app's single entry point. It handles permission requests (Location, Notifications) and sets up the `MainViewModel` and the root UI with Jetpack Compose.
+-   **`MainScreen.kt`**: The primary composable that builds the main user interface. It displays the UV index, Vitamin D rate, burn time, and settings. It is stateless and receives all data and event handlers from the ViewModel.
+-   **`MainViewModel.kt`**: The brain of the application. It combines data from the `UvRepository` and `UserPreferencesRepository` to construct the `UiState` that drives the UI. It also handles all user interactions, such as changing skin type or clothing level.
+-   **`InfoCard.kt`**: A composable that displays a detailed, dynamic explanation of how the Vitamin D calculation is performed, based on the methodology from the iOS version.
+-   **`VitaminDCalculator.kt`**: The core business logic for calculating the Vitamin D synthesis rate. This class contains the scientific formulas and factors.
+
+## 5. Vitamin D Calculation Logic
+
+The calculation is performed in `VitaminDCalculator.kt` and is based on the methodology from the iOS app.
+
+**Core Formula**:
+`Rate (IU/hr) = Base Rate × UV × Clothing × Skin × Age × Quality × Adaptation`
+
+**Factors Considered in the Android App**:
+
+1.  **UV Factor**: Based on the current UV index from the weather API.
+2.  **Clothing Factor**: Based on the user's selection (Full, Moderate, Minimal, Swimsuit).
+3.  **Skin Type Factor**: Based on the user's Fitzpatrick skin type (1-6).
+4.  **Sunscreen Factor**: Based on the user's selection (None, SPF 15, 30, 50).
+5.  **Age Factor**: Based on the user's selected age.
+6.  **UV Quality Factor**: Based on the time of day (solar angle).
+7.  **Adaptation Factor**: Currently a **placeholder** in the Android app, using a fixed value of `1000.0` in the calculation.
+
+This overview should serve as a useful starting point for any future work on the project.
