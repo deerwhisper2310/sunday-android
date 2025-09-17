@@ -1,0 +1,5 @@
+name: Sun Day
+repository: https://github.com/deerwhisper2310/sunday-android
+license: MIT
+assets:
+  - .*.apk
