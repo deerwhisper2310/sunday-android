@@ -162,7 +162,7 @@ fun MainScreen(
                         }
                         ActiveSheet.CLOTHING -> {
                             Text(
-                                text = "Clothing Level",
+                                text = "Clothing",
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(16.dp)
@@ -242,7 +242,7 @@ fun UvSection(
                 color = Color.White.copy(alpha = 0.7f)
             )
             Text(
-                text = String.format("%.1f", currentUv),
+                text = String.format(java.util.Locale.US, "%.1f", currentUv),
                 fontSize = 72.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -284,7 +284,7 @@ fun UvSection(
                         color = Color.White.copy(alpha = 0.6f)
                     )
                     Text(
-                        text = if (maxUv != null) String.format("%.1f", maxUv) else "---",
+                        text = if (maxUv != null) String.format(java.util.Locale.US, "%.1f", maxUv) else "---",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -337,7 +337,7 @@ private fun formatTime(dateTime: String): String {
 fun VitaminDSection(vitaminDRate: Double) {
     Card(
         title = "VITAMIN D (IU/min)",
-        value = String.format("%.0f", vitaminDRate / 60)
+        value = String.format(java.util.Locale.US, "%.0f", vitaminDRate / 60)
     )
 }
 
