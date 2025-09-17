@@ -38,7 +38,7 @@ fun VitaminDInfoCard(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = Color.Black.copy(alpha = 0.8f),
+            color = Color.Black.copy(alpha = 1f),
             modifier = Modifier.padding(16.dp)
         ) {
             Column(
@@ -58,17 +58,29 @@ fun VitaminDInfoCard(
                 HorizontalDivider(color = Color.White.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
 
                 Text(
-                    text = "The app estimates the rate of Vitamin D (in IU/min) your body can produce using a multi-factor model. The core formula is: ",
-                    fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.8f)
+                    text = "About",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
+
                 Text(
-                    text = "Base Rate × UV Factor × Clothing Factor × Skin Type Factor × Age Factor × Quality Factor × Adaptation Factor",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Light,
+                    text = "Sun Day uses a scientifically-based multi-factor model to estimate vitamin D synthesis from UV exposure.",
+                    fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.6f)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "The calculation considers UV intensity, time of day, clothing coverage, skin type, age, and recent exposure history.",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
+                Text(
+                    text = "Base rate: 21,000 IU/hr (minimal clothing, ~80% exposure)",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 val uvDataState = uiState.uvDataState
                 val currentUv: Double = if (uvDataState is UvDataState.Success) {
@@ -94,22 +106,17 @@ fun VitaminDInfoCard(
                 HorizontalDivider(color = Color.White.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
 
                 Text(
-                    text = "CURRENT CALCULATION (IU/min)",
-                    fontSize = 16.sp,
+                    text = "Current Factors",
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
-                Text(
-                    text = String.format("%.0f", vitaminDPerMinute),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(10.dp))
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 InfoText("UV Index", String.format("%.1f", currentUv))
                 Text(
-                    text = "Higher UV levels increase production, but the effect plateaus at high indexes due to self-regulation.",
+                    text = "Higher UV levels increase production, but the effect plateaus at high indexes.",
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
@@ -117,7 +124,7 @@ fun VitaminDInfoCard(
 
                 InfoText("Skin Type", uiState.userPreferences.skinType.fitzpatrickName)
                 Text(
-                    text = "Lighter skin tones (e.g., Type I, II) synthesize Vitamin D more efficiently than darker tones (e.g., Type V, VI).",
+                    text = "Lighter skin tones synthesize Vitamin D at a higher rate than darker tones.",
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
@@ -125,7 +132,7 @@ fun VitaminDInfoCard(
 
                 InfoText("Clothing", uiState.userPreferences.clothingLevel.description)
                 Text(
-                    text = "The more skin covered, the lower the Vitamin D production (e.g., Minimal/Swimwear ~80% exposure, Heavy/Fully covered ~5% exposure).",
+                    text = "The more skin covered, the lower the Vitamin D production.",
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
@@ -133,7 +140,7 @@ fun VitaminDInfoCard(
 
                 InfoText("Sunscreen", uiState.userPreferences.sunscreen.displayName)
                 Text(
-                    text = "Sunscreen blocks UVB rays necessary for Vitamin D synthesis, significantly reducing production based on its UV transmission factor.",
+                    text = "Sunscreen blocks UVB rays necessary for Vitamin D synthesis, significantly reducing production.",
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
@@ -141,17 +148,17 @@ fun VitaminDInfoCard(
 
                 InfoText("Age", uiState.userPreferences.age.toString())
                 Text(
-                    text = "The body's ability to produce Vitamin D naturally declines with age (e.g., ~1% decrease per year after 20, 25% efficiency at ≥70).",
+                    text = "The body's ability to produce Vitamin D naturally declines with age (~1% decrease per year after 20, 25% efficiency at ≥70).",
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                HorizontalDivider(color = Color.White.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(color = Color.White.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(vertical = 20.dp))
 
                 Text(
-                    text = "OTHER FACTORS CONSIDERED",
-                    fontSize = 16.sp,
+                    text = "Other Factors",
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
@@ -165,7 +172,7 @@ fun VitaminDInfoCard(
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.7f), modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = "This calculation is an estimate based on these factors. Individual results may vary and this should not be considered medical advice.",
