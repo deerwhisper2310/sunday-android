@@ -23,9 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.text.style.TextAlign
 import io.block.goose.sunday.ui.UiState
 import io.block.goose.sunday.ui.UvDataState
-import io.block.goose.sunday.domain.calculator.VitaminDCalculator
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -61,7 +61,8 @@ fun VitaminDInfoCard(
                     text = "About",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.Start)
                 )
 
                 Text(
@@ -75,7 +76,7 @@ fun VitaminDInfoCard(
                     color = Color.White.copy(alpha = 0.6f)
                 )
                 Text(
-                    text = "Base rate: 21,000 IU/hr (minimal clothing, ~80% exposure)",
+                    text = "Base rate: 350 IU/min (minimal clothing, ~80% exposure)",
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.6f)
                 )
@@ -92,29 +93,19 @@ fun VitaminDInfoCard(
                     if (currentTimeIndex != -1) uvDataState.uvResponse.hourly.uvIndex[currentTimeIndex] ?: 0.0 else 0.0
                 } else 0.0
 
-                val vitaminDCalculator = VitaminDCalculator()
-                val vitaminDPerMinute = vitaminDCalculator.calculateVitaminDRate(
-                    uvIndex = currentUv,
-                    clothingLevel = uiState.userPreferences.clothingLevel,
-                    sunscreen = uiState.userPreferences.sunscreen,
-                    skinType = uiState.userPreferences.skinType,
-                    userAge = uiState.userPreferences.age, // Use user's age
-                    currentTime = ZonedDateTime.now(), // Current time for UV quality factor
-                    averageDailyExposure = 1000.0 // Placeholder as in MainViewModel
-                ) / 60.0 // Convert IU/hour to IU/minute
-
                 HorizontalDivider(color = Color.White.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
 
                 Text(
                     text = "Current Factors",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.Start)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                InfoText("UV Index", String.format("%.1f", currentUv))
+                InfoText("UV Index", String.format(java.util.Locale.US, "%.1f", currentUv))
                 Text(
                     text = "Higher UV levels increase production, but the effect plateaus at high indexes.",
                     fontSize = 12.sp,
@@ -160,7 +151,8 @@ fun VitaminDInfoCard(
                     text = "Other Factors",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.Start)
                 )
                 Text(
                     text = "• UV Quality Factor (Time of Day): Accounts for solar angle effects; production is most efficient around solar noon.",
@@ -197,9 +189,10 @@ fun VitaminDInfoCard(
 fun InfoText(label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = label, color = Color.White.copy(alpha = 0.8f))
-        Text(text = value, color = Color.White, fontWeight = FontWeight.Medium)
+        Text(text = value, color = Color.White, fontWeight = FontWeight.Medium, modifier = Modifier.fillMaxWidth().weight(1f), textAlign = TextAlign.End)
     }
 }
