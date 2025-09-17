@@ -1,5 +1,8 @@
 name: Sun Day
+summary: Real‑time UV data, personalized Vitamin D calculations, and a day‑night UI to boost Vitamin D while reducing sun risk.
 repository: https://github.com/deerwhisper2310/sunday-android
 license: MIT
+remote_metadata:
+  - github
 assets:
   - .*.apk
