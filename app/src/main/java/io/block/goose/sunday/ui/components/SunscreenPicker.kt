@@ -25,7 +25,7 @@ fun SunscreenPicker(
     onDismiss: () -> Unit
 ) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(Sunscreen.values()) { sunscreen ->
+        items(Sunscreen.entries.toTypedArray()) { sunscreen ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

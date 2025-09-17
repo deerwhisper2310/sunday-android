@@ -24,7 +24,7 @@ fun ClothingPicker(
     onDismiss: () -> Unit
 ) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(ClothingLevel.values()) { clothingLevel ->
+        items(ClothingLevel.entries.toTypedArray()) { clothingLevel ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

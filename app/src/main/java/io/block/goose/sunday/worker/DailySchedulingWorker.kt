@@ -2,14 +2,11 @@
 package io.block.goose.sunday.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-
-import io.block.goose.sunday.data.remote.UvResponse
-import io.block.goose.sunday.data.repository.UvRepository
-import io.block.goose.sunday.ui.UvDataState
-import android.util.Log
 import com.google.android.gms.location.LocationServices
+import io.block.goose.sunday.data.repository.UvRepository
 import io.block.goose.sunday.services.NotificationScheduler
 import kotlinx.coroutines.tasks.await
 
